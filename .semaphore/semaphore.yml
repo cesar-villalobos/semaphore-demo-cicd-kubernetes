@@ -15,6 +15,8 @@ blocks:
             - 'docker pull $DOCKER_HUB_USER/demo:latest || true'
             - 'docker build --cache-from $DOCKER_HUB_USER/demo:latest -t $DOCKER_HUB_USER/demo:$SEMAPHORE_WORKFLOW_ID .'
             - 'docker push $DOCKER_HUB_USER/demo:$SEMAPHORE_WORKFLOW_ID'
+      secrets:
+        - name: DO docker hub
   - name: Tests
     task:
       prologue:
@@ -41,7 +43,9 @@ blocks:
       jobs:
         - name: Push
           commands:
-            - docker login -u $SEMAPHORE_REGISTRY_USERNAME -p $SEMAPHORE_REGISTRY_PASSWORD $SEMAPHORE_REGISTRY_URL
-            - 'docker pull $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $SEMAPHORE_REGISTRY_URL/demo:latest'
-            - 'docker push $SEMAPHORE_REGISTRY_URL/demo:latest'
+            - docker login -u $DO_DOCKER_HUB_USER -p $DO_DOCKER_HUB_PASSWORD $DO_REGISTRY_URL
+            - 'docker pull $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker tag $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $DO_REGISTRY_URL/demo:latest'
+            - 'docker push $DO_REGISTRY_URL/demo:latest'
+      secrets:
+        - name: DO docker hub
