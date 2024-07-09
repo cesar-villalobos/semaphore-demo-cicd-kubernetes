@@ -5,10 +5,28 @@ agent:
     type: e1-standard-2
     os_image: ubuntu2004
 blocks:
-  - name: Build
+  - name: Push
     task:
       jobs:
         - name: docker build
           commands:
-            - checkout
-            - docker build -t your-image .
+            - docker login \
+            - '  -u $SEMAPHORE_REGISTRY_USERNAME \'
+            - '  -p $SEMAPHORE_REGISTRY_PASSWORD \ $SEMAPHORE_REGISTRY_URL'
+promotions:
+  - name: Canary
+    pipeline_file: pipeline_11.yml
+    auto_promote:
+      when: result = 'passed' and (branch = 'master' or tag =~ '^hotfix*')
+    parameters:
+      env_vars:
+        - required: true
+          options: []
+          default_value: '1'
+          description: Number of canary pods to deploy
+          name: CANARY_PODS
+        - required: true
+          options: []
+          default_value: '2'
+          description: Number of stable pods to scale
+          name: STABLE_PODS
