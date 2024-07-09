@@ -16,7 +16,7 @@ blocks:
             - 'docker build --cache-from $DO_REGISTRY_URL/demo:latest -t $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID .'
             - 'docker push $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
       secrets:
-        - name: DO docker hub
+        - name: do_registry
   - name: Tests
     task:
       prologue:
@@ -37,7 +37,7 @@ blocks:
             - sem-service start postgres
             - 'docker run --net=host -it $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run test'
       secrets:
-        - name: DO docker hub
+        - name: do_registry
   - name: Push
     task:
       jobs:
@@ -48,4 +48,4 @@ blocks:
             - 'docker tag $DO_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $DO_REGISTRY_URL/demo:latest'
             - 'docker push $DO_REGISTRY_URL/demo:latest'
       secrets:
-        - name: DO docker hub
+        - name: do_registry
