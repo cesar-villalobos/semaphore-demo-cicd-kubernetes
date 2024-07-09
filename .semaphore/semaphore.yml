@@ -11,10 +11,10 @@ blocks:
         - name: docker build
           commands:
             - checkout
-            - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-            - 'docker pull $DOCKER_HUB_USER/demo:latest || true'
-            - 'docker build --cache-from $DOCKER_HUB_USER/demo:latest -t $DOCKER_HUB_USER/demo:$SEMAPHORE_WORKFLOW_ID .'
-            - 'docker push $DOCKER_HUB_USER/demo:$SEMAPHORE_WORKFLOW_ID'
+            - docker login -u $DO_DOCKER_HUB_USER -p $DO_DOCKER_HUB_PASSWORD $DO_DOCKER_REGISTRY
+            - 'docker pull $DO_DOCKER_REGISTRY/demo:latest || true'
+            - 'docker build --cache-from $DO_DOCKER_REGISTRY/demo:latest -t $DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
+            - 'docker push $DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
   - name: Tests
     task:
       prologue:
