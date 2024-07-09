@@ -12,9 +12,9 @@ blocks:
           commands:
             - checkout
             - docker login -u $DO_DOCKER_HUB_USER -p $DO_DOCKER_HUB_PASSWORD $DO_DOCKER_REGISTRY
-            - 'docker pull DO_DOCKER_REGISTRY/demo:latest || true'
-            - 'docker build --cache-from DO_DOCKER_REGISTRY/demo:latest -t DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
-            - 'docker push DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker pull $DO_DOCKER_REGISTRY/demo:latest || true'
+            - 'docker build --cache-from $DO_DOCKER_REGISTRY/demo:latest -t $DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
+            - 'docker push $DO_DOCKER_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
       secrets:
         - name: DO docker hub
   - name: Tests
