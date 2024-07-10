@@ -52,7 +52,7 @@ blocks:
           commands:
             - docker login -u $DO_USER -p $DO_PASSWORD $DO_REGISTRY
             - 'docker pull $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID DO_REGISTRY/demo:staging'
+            - 'docker tag $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID $DO_REGISTRY/demo:staging'
             - 'docker push $DO_REGISTRY/demo:staging'
       secrets:
         - name: do_registry
