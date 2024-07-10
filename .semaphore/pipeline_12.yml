@@ -15,6 +15,8 @@ blocks:
       env_vars:
         - name: CLUSTER_NAME
           value: semaphore-demo-cicd-kubernetes
+        - name: REGISTRY_NAME
+          value: yottabyte
       jobs:
         - name: Image
           commands:
@@ -23,7 +25,7 @@ blocks:
             - doctl registry kubernetes-manifest | kubectl apply -f -
             - checkout
             - kubectl apply -f manifests/service.yml
-            - './apply.sh manifests/deployment.yml addressbook-canary $CANARY_PODS $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
+            - './apply.sh manifests/deployment.yml addressbook-canary $CANARY_PODS registry.digitalocean.com/$REGISTRY_NAME/demo:$SEMAPHORE_WORKFLOW_ID'
             - if kubectl get deployment addressbook-stable; then kubectl scale --replicas=$STABLE_PODS deployment/addressbook-stable; fi
   - name: Functional Test
     dependencies:
