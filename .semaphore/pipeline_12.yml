@@ -26,6 +26,7 @@ blocks:
             - doctl registry kubernetes-manifest | kubectl apply -f -
             - checkout
             - kubectl apply -f manifests/service.yml
+            - docker login -u $DO_USER -p $DO_PASSWORD $DO_REGISTRY
             - './apply.sh manifests/deployment.yml addressbook-canary $CANARY_PODS registry.digitalocean.com/$REGISTRY_NAME/demo:$SEMAPHORE_WORKFLOW_ID'
   - name: Functional Test
     dependencies:
