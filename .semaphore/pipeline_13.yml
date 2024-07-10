@@ -18,6 +18,7 @@ blocks:
             - './apply.sh manifests/deployment.yml addressbook-stable $STABLE_PODS $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
             - if kubectl get deployment addressbook-canary; then kubectl delete deployment/addressbook-canary; fi
       secrets:
+        - name: db-params
         - name: do-key
         - name: do_registry
       env_vars:

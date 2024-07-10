@@ -9,6 +9,7 @@ blocks:
     dependencies: []
     task:
       secrets:
+        - name: db-params
         - name: do-key
         - name: do_registry
       env_vars:
@@ -29,6 +30,7 @@ blocks:
       - Deploy
     task:
       secrets:
+        - name: db-params
         - name: do-key
       env_vars:
         - name: CLUSTER_NAME
