@@ -10,7 +10,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - echo $DOCKERHUB_PASSWORD | docker login --username "$DOCKERHUB_USER" --password-stdin
+          - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD semaphore-demo
       jobs:
         - name: Build
           commands:
