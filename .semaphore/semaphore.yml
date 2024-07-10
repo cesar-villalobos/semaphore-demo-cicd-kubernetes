@@ -14,9 +14,9 @@ blocks:
       jobs:
         - name: Build
           commands:
-            - 'docker pull $DO_REGISTRY:staging || true'
-            - 'docker build --cache-from $DO_REGISTRY:staging -t $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID .'
-            - 'docker push $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker pull $DO_REGISTRY/demo:staging || true'
+            - 'docker build --cache-from $DO_REGISTRY/demo:staging -t $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
+            - 'docker push $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
       secrets:
         - name: do_registry
         - name: dockerhub
@@ -28,20 +28,20 @@ blocks:
       prologue:
         commands:
           - docker login -u $DO_USER -p $DO_PASSWORD $DO_REGISTRY
-          - 'docker pull $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID'
+          - 'docker pull $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
       jobs:
         - name: Static test
           commands:
-            - 'docker run -it $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID npm run lint'
+            - 'docker run -it $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID npm run lint'
         - name: Integration test
           commands:
             - sem-service start postgres
-            - 'docker run --net=host -it $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID npm run test'
+            - 'docker run --net=host -it $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID npm run test'
         - name: Functional test
           commands:
             - sem-service start postgres
-            - 'docker run --net=host -it $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID npm run ping'
-            - 'docker run --net=host -it $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID npm run migrate'
+            - 'docker run --net=host -it $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID npm run ping'
+            - 'docker run --net=host -it $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID npm run migrate'
       secrets:
         - name: do_registry
         - name: dockerhub
@@ -51,9 +51,9 @@ blocks:
         - name: Push
           commands:
             - docker login -u $DO_USER -p $DO_PASSWORD $DO_REGISTRY
-            - 'docker pull $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $DO_REGISTRY:$SEMAPHORE_WORKFLOW_ID $DOCKERHUB_REGISTRY_URL:staging'
-            - 'docker push $DO_REGISTRY:staging'
+            - 'docker pull $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker tag $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID $DOCKERHUB_REGISTRY_URL:staging'
+            - 'docker push $DO_REGISTRY/demo:staging'
       secrets:
         - name: do_registry
         - name: dockerhub
