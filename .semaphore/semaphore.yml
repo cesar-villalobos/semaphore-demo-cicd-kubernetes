@@ -1,5 +1,5 @@
 version: v1.0
-name: Semaphore CI/CD Kubernetes Demo
+name: Docker
 agent:
   machine:
     type: e1-standard-2
@@ -57,3 +57,20 @@ blocks:
       secrets:
         - name: do_registry
         - name: dockerhub
+promotions:
+  - name: Canary
+    pipeline_file: pipeline_12.yml
+    auto_promote:
+      when: result = 'passed' and (branch = 'master' or tag =~ '^hotfix*')
+    parameters:
+      env_vars:
+        - required: true
+          options: []
+          default_value: '1'
+          description: Number of canary pods to deploy
+          name: CANARY_PODS
+        - required: true
+          options: []
+          default_value: '2'
+          description: Number of stable pods to scale
+          name: STABLE_PODS
