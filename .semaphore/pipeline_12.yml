@@ -27,6 +27,7 @@ blocks:
             - checkout
             - kubectl apply -f manifests/service.yml
             - './apply.sh manifests/deployment-do.yml addressbook-canary $CANARY_PODS registry.digitalocean.com/$REGISTRY_NAME/demo:$SEMAPHORE_WORKFLOW_ID'
+            - if kubectl get deployment addressbook-stable; then kubectl scale --replicas=$STABLE_PODS deployment/addressbook-stable; fi
   - name: Functional Test
     dependencies:
       - Deploy
@@ -39,6 +40,8 @@ blocks:
       env_vars:
         - name: CLUSTER_NAME
           value: semaphore-demo-cicd-kubernetes
+        - name: REGISTRY_NAME
+          value: yottabyte
       jobs:
         - name: Test and Migrate
           commands:
@@ -46,7 +49,8 @@ blocks:
             - 'doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}'
             - doctl registry kubernetes-manifest | kubectl apply -f -
             - checkout
-            - POD=$(kubectl get pod -l deployment=addressbook-canary -o name | head -n 1) kubectl exec -it "$POD" -- npm run ping
+            - POD=$(kubectl get pod -l deployment=addressbook-canary -o name | head -n 1)
+            - kubectl exec -it "$POD" -- npm run ping
             - kubectl exec -it "$POD" -- npm run migrate
 promotions:
   - name: Stable
