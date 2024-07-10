@@ -10,7 +10,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - docker login -u DOCKERHUB_USER -p DOCKERHUB_PASSWORD
+          - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       jobs:
         - name: Build
           commands:
@@ -18,7 +18,7 @@ blocks:
             - 'docker build --cache-from $DOCKERHUB_REGISTRY_URL:latest -t $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID .'
             - 'docker push $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID'
       secrets:
-        - name: docker-hub
+        - name: dockerhub
   - name: Tests
     task:
       env_vars:
@@ -26,7 +26,7 @@ blocks:
           value: test
       prologue:
         commands:
-          - 'echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USER}" --password-stdin'
+          - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
           - 'docker pull $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID'
       jobs:
         - name: Static test
@@ -42,15 +42,15 @@ blocks:
             - 'docker run --net=host -it $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID npm run ping'
             - 'docker run --net=host -it $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID npm run migrate'
       secrets:
-        - name: docker-hub
+        - name: dockerhub
   - name: Push as latest
     task:
       jobs:
         - name: Push
           commands:
-            - 'echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USER}" --password-stdin'
+            - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
             - 'docker pull $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID'
             - 'docker tag $DOCKERHUB_REGISTRY_URL:$SEMAPHORE_WORKFLOW_ID $DOCKERHUB_REGISTRY_URL:latest'
             - 'docker push $DOCKERHUB_REGISTRY_URL:latest'
       secrets:
-        - name: docker-hub
+        - name: dockerhub
