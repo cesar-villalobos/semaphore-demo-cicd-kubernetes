@@ -14,8 +14,8 @@ blocks:
       jobs:
         - name: Build
           commands:
-            - 'docker pull $DO_REGISTRY/demo:staging || true'
-            - 'docker build --cache-from $DO_REGISTRY/demo:staging -t $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
+            - 'docker pull $DO_REGISTRY/demo:latest || true'
+            - 'docker build --cache-from $DO_REGISTRY/demo:latest -t $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID .'
             - 'docker push $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
       secrets:
         - name: do_registry
@@ -52,8 +52,8 @@ blocks:
           commands:
             - docker login -u $DO_USER -p $DO_PASSWORD $DO_REGISTRY
             - 'docker pull $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID $DO_REGISTRY/demo:staging'
-            - 'docker push $DO_REGISTRY/demo:staging'
+            - 'docker tag $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID $DO_REGISTRY/demo:latest'
+            - 'docker push $DO_REGISTRY/demo:latest'
       secrets:
         - name: do_registry
         - name: dockerhub
