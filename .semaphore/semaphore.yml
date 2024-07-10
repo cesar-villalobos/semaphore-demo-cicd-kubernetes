@@ -10,7 +10,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+          - docker login -u DOCKERHUB_USER -p DOCKERHUB_PASSWORD
       jobs:
         - name: Build
           commands:
