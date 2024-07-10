@@ -18,7 +18,7 @@ blocks:
         - name: Image
           commands:
             - doctl auth init --access-token $DO_ACCESS_TOKEN
-            - 'doctl kubernetes cluster kubeconfig save "${CLUSTER_NAME}" doctl registry kubernetes-manifest | kubectl apply -f - checkout'
+            - 'doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME} doctl registry kubernetes-manifest | kubectl apply -f - checkout'
             - kubectl apply -f manifests/service.yml
             - './apply.sh manifests/deployment.yml addressbook-canary $CANARY_PODS $DO_REGISTRY/demo:$SEMAPHORE_WORKFLOW_ID'
             - if kubectl get deployment addressbook-stable; then kubectl scale --replicas=$STABLE_PODS deployment/addressbook-stable; fi
@@ -35,7 +35,7 @@ blocks:
         - name: Test and Migrate
           commands:
             - doctl auth init --access-token $DO_ACCESS_TOKEN
-            - 'doctl kubernetes cluster kubeconfig save "${CLUSTER_NAME}"'
+            - 'doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}'
             - doctl registry kubernetes-manifest | kubectl apply -f -
             - checkout
             - POD=$(kubectl get pod -l deployment=addressbook-canary -o name | head -n 1) kubectl exec -it "$POD" -- npm run ping
