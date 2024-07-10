@@ -51,7 +51,6 @@ blocks:
             - checkout
             - POD=$(kubectl get pod -l deployment=addressbook-canary -o name | head -n 1)
             - kubectl exec -it "$POD" -- npm run ping
-            - kubectl exec -it "$POD" -- npm run migrate
 promotions:
   - name: Stable
     pipeline_file: pipeline_13.yml
