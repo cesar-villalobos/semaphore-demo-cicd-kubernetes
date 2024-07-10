@@ -12,6 +12,7 @@ blocks:
         - name: db-params
         - name: do-key
         - name: do_registry
+        - name: dockerhub
       env_vars:
         - name: CLUSTER_NAME
           value: semaphore-demo-cicd-kubernetes
@@ -33,6 +34,8 @@ blocks:
       secrets:
         - name: db-params
         - name: do-key
+        - name: do_registry
+        - name: dockerhub
       env_vars:
         - name: CLUSTER_NAME
           value: semaphore-demo-cicd-kubernetes
